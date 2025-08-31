@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face-API.js Model Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.20.1/dist/face-api.min.js"></script>
+</head>
+<body>
+    <h1>Face-API.js Model Loading Test</h1>
+    <div id="status">Loading...</div>
+    <video id="video" width="640" height="480" autoplay muted></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const status = document.getElementById('status');
+
+        async function loadModels() {
+            try {
+                status.innerHTML = 'Loading face-api.js models...';
+                console.log('Starting model loading...');
+                
+                // Load models from local /models directory
+                await Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+                    faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+                    faceapi.nets.faceRecognitionNet.loadFromUri('/models')
+                ]);
+                
+                console.log('✅ All models loaded successfully!');
+                status.innerHTML = '✅ Models loaded successfully! Starting camera...';
+                
+                // Start camera
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+                
+                video.addEventListener('loadedmetadata', () => {
+                    status.innerHTML = '✅ Camera started! Face detection active.';
+                    detectFaces();
+                });
+                
+            } catch (error) {
+                console.error('❌ Error loading models:', error);
+                status.innerHTML = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function detectFaces() {
+            const ctx = canvas.getContext('2d');
+            
+            setInterval(async () => {
+                try {
+                    const detection = await faceapi
+                        .detectSingleFace(video, new faceapi.TinyFaceDetectorOptions({ inputSize: 416, scoreThreshold: 0.4 }))
+                        .withFaceLandmarks()
+                        .withFaceDescriptor();
+                    
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    if (detection) {
+                        const { x, y, width, height } = detection.detection.box;
+                        ctx.strokeStyle = '#00ff00';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x, y, width, height);
+                        
+                        ctx.fillStyle = '#00ff00';
+                        ctx.font = '16px Arial';
+                        ctx.fillText(`Confidence: ${(detection.detection.score * 100).toFixed(1)}%`, x, y - 10);
+                        
+                        console.log('Face detected with confidence:', detection.detection.score);
+                    }
+                } catch (error) {
+                    console.error('Detection error:', error);
+                }
+            }, 100);
+        }
+
+        // Start the test
+        loadModels();
+    </script>
+</body>
+</html>

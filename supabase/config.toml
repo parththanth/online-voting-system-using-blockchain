@@ -1,0 +1,26 @@
+
+project_id = "zjymowjrqidmgslauauv"
+
+[functions.auth-request-otp]
+verify_jwt = false
+
+[functions.auth-verify-otp]
+verify_jwt = false
+
+[functions.auth-face-verify]
+verify_jwt = false
+
+[functions.vote]
+verify_jwt = false
+
+[functions.admin-stats]
+verify_jwt = false
+
+[functions.admin-logs]
+verify_jwt = false
+
+[functions.admin-schedule]
+verify_jwt = false
+
+[functions.admin-face-data]
+verify_jwt = false
