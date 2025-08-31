@@ -27,18 +27,19 @@ export const authService = {
         }
         // Parse stringified JSON message
         if (typeof err.message === 'string') {
-        try {
-          const errorData = JSON.parse(err.message);
-          return {
-            success: false,
-            error: errorData.error || 'Failed to send OTP'
-          };
-        } catch (parseError) {
-          // If JSON parsing fails, return the original error message
-          return {
-            success: false,
-            error: err.message || 'Failed to send OTP'
-          };
+          try {
+            const errorData = JSON.parse(err.message);
+            return {
+              success: false,
+              error: errorData.error || 'Failed to send OTP'
+            };
+          } catch (parseError) {
+            // If JSON parsing fails, return the original error message
+            return {
+              success: false,
+              error: err.message || 'Failed to send OTP'
+            };
+          }
         }
       }
       

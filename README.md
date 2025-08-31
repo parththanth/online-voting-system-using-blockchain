@@ -8,9 +8,13 @@ A cutting-edge digital voting platform that combines blockchain-inspired securit
 
 ## 🚀 Live Demo
 
-**Public URL**: [https://voteguard.loca.lt](https://voteguard.loca.lt)
+**Production URL**: [https://votechain-ai.vercel.app](https://votechain-ai.vercel.app)
 
-*Access the live demo with real SMS OTP and face recognition authentication*
+*Access the live application with real SMS OTP and face recognition authentication*
+
+**Development URL**: [https://voteguard.loca.lt](https://voteguard.loca.lt)
+
+*Development/staging environment for testing*
 
 ## ✨ Key Features
 
